@@ -25,7 +25,7 @@ public class ProfileService {
         // send activation email logic can be added here
         String activationLink = "http://localhost:8989/api/v1.0/activate?token=" + newProfile.getActivationToken();
         String subject = "Activate your Money Manager account";
-        String body = "Click the following link to activate your account: " + activationLink;
+        String body = "Click the following link to active your account: " + activationLink;
         emailService.sendEmail(newProfile.getEmail(), subject, body);
 
         return toDTO(newProfile);
@@ -53,6 +53,14 @@ public class ProfileService {
                 .createdAt(profileEntity.getCreatedAt())
                 .updatedAt(profileEntity.getUpdatedAt())
                 .build();
+    }
+
+    public boolean activateProfile(String token) {
+        return profileRepo.findByActivationToken(token).map(profile -> {
+            profile.setIsActive(true);
+            profileRepo.save(profile);
+            return true;
+        }).orElse(false);
     }
 
 }

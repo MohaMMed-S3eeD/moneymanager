@@ -8,4 +8,5 @@ import com.example.moneymanager.entity.ProfileEntity;
 
 public interface ProfileRepo extends JpaRepository <ProfileEntity, Long> {
     Optional<ProfileEntity> findByEmail(String email);
+    Optional<ProfileEntity> findByActivationToken(String token);
 }
