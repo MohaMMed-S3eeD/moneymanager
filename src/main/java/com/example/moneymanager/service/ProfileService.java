@@ -1,6 +1,7 @@
 package com.example.moneymanager.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.UUID;
+
 import org.springframework.stereotype.Service;
 
 import com.example.moneymanager.dto.ProfileDTO;
@@ -13,11 +14,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ProfileService {
 
-   
     private final ProfileRepo profileRepo;
 
     public ProfileDTO registerProfile(ProfileDTO profileDTO) {
-        return profileDTO;
+        ProfileEntity newProfile = toEntity(profileDTO);
+        newProfile.setActivationToken(UUID.randomUUID().toString());
+        newProfile = profileRepo.save(newProfile);
+        return toDTO(newProfile);
     }
 
     public ProfileEntity toEntity(ProfileDTO profileDTO) {
@@ -31,6 +34,17 @@ public class ProfileService {
                 .updatedAt(profileDTO.getUpdatedAt())
                 .build();
 
+    };
+
+    public ProfileDTO toDTO(ProfileEntity profileEntity) {
+        return ProfileDTO.builder()
+                .id(profileEntity.getId())
+                .fullName(profileEntity.getFullName())
+                .Email(profileEntity.getEmail())
+                .profileImgUrl(profileEntity.getProfileImgUrl())
+                .createdAt(profileEntity.getCreatedAt())
+                .updatedAt(profileEntity.getUpdatedAt())
+                .build();
     }
 
 }
