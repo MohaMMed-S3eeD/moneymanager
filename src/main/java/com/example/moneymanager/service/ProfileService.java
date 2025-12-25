@@ -2,6 +2,7 @@ package com.example.moneymanager.service;
 
 import java.util.UUID;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.moneymanager.dto.ProfileDTO;
@@ -16,10 +17,12 @@ public class ProfileService {
 
     private final ProfileRepo profileRepo;
     private final EmailService emailService;
+    private final PasswordEncoder passwordEncoder;
 
     public ProfileDTO registerProfile(ProfileDTO profileDTO) {
         ProfileEntity newProfile = toEntity(profileDTO);
         newProfile.setActivationToken(UUID.randomUUID().toString());
+        newProfile.setPassword(passwordEncoder.encode(newProfile.getPassword()));
         newProfile = profileRepo.save(newProfile);
 
         // send activation email logic can be added here
@@ -36,7 +39,7 @@ public class ProfileService {
                 .id(profileDTO.getId())
                 .fullName(profileDTO.getFullName())
                 .Email(profileDTO.getEmail())
-                .password(profileDTO.getPassword())
+                .password(passwordEncoder.encode(profileDTO.getPassword()))
                 .profileImgUrl(profileDTO.getProfileImgUrl())
                 .createdAt(profileDTO.getCreatedAt())
                 .updatedAt(profileDTO.getUpdatedAt())
