@@ -28,8 +28,8 @@ public class ProfileEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String fullName;
-    @Column(unique = true)
-    private String Email;
+    @Column(unique = true,name="email")
+    private String email;
     private String password;
     private String profileImgUrl;
     @Column(updatable = false)
